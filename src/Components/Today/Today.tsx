@@ -1,35 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { todayDataType } from '../../Types/types'
 import "./Today.css"
 
-export default function Today({ data, search_parameter }: todayDataType | any) {
+export default function Today( { data, search } : todayDataType | any) {
 
-  let tempdata = {
-    loc: "Cape Town",
-    time: "12:36 PM",
-    type: "Sunny",
-    temp: "27 C",
-    wind: "SE 23 km/h",
-    air_quality: "25",
-    icon: "https://www.accuweather.com/images/weathericons/1.svg"
-  }
+  const [time, setTime] = useState<Date | any>(Date().split(" ")[4])
+
+  useEffect(() => {
+    setInterval(() => {
+      setTime(Date())
+    }, 1000)
+  }, [])
 
   return (
-    <div className='wrapper'>
+    <div className='today-wrapper'>
       <input type="text" placeholder='Search...' />
       <div className='wrapper-weather'>
         <div className='wrapper-weather-top-det'>
           <div className='wrapper-weather-top-det__loc-type'>
             <div className='loc'>
-              <span>{tempdata.loc}</span>
+              <span>{search.split(",")[0]}</span>
             </div>
             <div className='type'>
-              <span>{tempdata.type}</span>
+              <span>{data.type}</span>
             </div>
           </div>
           <div className='wrapper-weather-top-det__time'>
             <div className='time'>
-              <span>{tempdata.time}</span>
+              <span>{time.split(" ")[4]}</span>
             </div>
           </div>
         </div>
@@ -37,17 +35,17 @@ export default function Today({ data, search_parameter }: todayDataType | any) {
           <div className='wrapper-weather-bottom-det__det-pic'>
             <div className='wrapper-weather-bottom-det__det'>
               <div className='temp'>
-                <span>{tempdata.temp}</span>
+                <span>{data.temp}</span>
               </div>
               <div className='wind'>
-                <span>{tempdata.wind}</span>
+                <span>Wind: {data.wind}</span>
               </div>
               <div className='air-quality'>
-                <span>{tempdata.air_quality}</span>
+                <span>Air quality: {data.air_quality}</span>
               </div>
             </div>
             <div className='wrapper-weather-bottom-det__pic'>
-              <img src={tempdata.icon} alt="pic" />
+              <img src={data.icon} alt="pic" />
             </div>
           </div>
         </div>
