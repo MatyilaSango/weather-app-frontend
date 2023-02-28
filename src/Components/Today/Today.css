@@ -1,13 +1,14 @@
-.wrapper{
+.today-wrapper{
     width: 400px;
     height: 100%;
-    background-image: linear-gradient(45deg, #0B131E50, #4726A450);
+    background-image: linear-gradient(45deg, #0B131E70, #4726A470);
     position: relative;
     border-radius: 30px;
     color: white;
     padding: 20px;
+    box-shadow: 0px 0px 10px 5px #00000050;
 }
-.wrapper input{
+.today-wrapper input{
     width: 100%;
     height: 35px;
     border-radius: 10px;
@@ -20,7 +21,7 @@
     box-shadow: inset 0 1px 0 2px #00000025;
     
 }
-.wrapper input::placeholder{
+.today-wrapper input::placeholder{
     color: rgba(255, 255, 255, 0.70);
 }
 .wrapper-weather{
@@ -77,4 +78,7 @@
     position: relative;
     left: 20px;
     top: 10px;
+}
+.today-wrapper span{
+    text-shadow: 0px 12px 2px #000000;
 }

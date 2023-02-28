@@ -1,0 +1,13 @@
+.sunrise-sunset-wrapper-card{
+    width: 300px;
+    height: 150px;
+    background-color: #FFFDFD50;;
+}
+.sunrise-sunset-wrapper-card_title{
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    font-size: 22px;
+    font-weight: 500;
+}
