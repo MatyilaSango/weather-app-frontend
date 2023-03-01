@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { todayDataType } from '../../Types/types'
 import "./Today.css"
 
-export default function Today( { data, search } : todayDataType | any) {
-
+export default function Today( { data, search, setSearch, setreRender } : todayDataType | any ) {
+  let inputRef = useRef<String | any>()
   const [time, setTime] = useState<Date | any>(Date().split(" ")[4])
 
   useEffect(() => {
@@ -12,14 +12,22 @@ export default function Today( { data, search } : todayDataType | any) {
     }, 1000)
   }, [])
 
+  const handleSearch = (e: any): void => {
+    const inpitValue: String = e.target.value
+    if(e.key === 'Enter'){
+      setSearch(inpitValue.replace("z", ""))
+      setreRender(true)
+    }
+  }
+
   return (
     <div className='today-wrapper'>
-      <input type="text" placeholder='Search...' />
+      <input id="input" type="text" placeholder='Search...' ref={inputRef} onKeyDown={handleSearch}/>
       <div className='wrapper-weather'>
         <div className='wrapper-weather-top-det'>
           <div className='wrapper-weather-top-det__loc-type'>
             <div className='loc'>
-              <span>{search.split(",")[0]}</span>
+              <div className='loc-text'>{String(search).replaceAll(" ", "_")}</div>
             </div>
             <div className='type'>
               <span>{data.type}</span>

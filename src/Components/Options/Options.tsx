@@ -6,7 +6,7 @@ export default function Options({ setDailyOption }: React.Dispatch<React.SetStat
     let arrayKeys: number[] = Array.from({length: 12}, (_,i) => i+1)
 
     const handleOptionChange = (e: MouseEvent<HTMLSpanElement>): void => {
-        setDailyOption((e.currentTarget.lastChild))
+        setDailyOption(String(e.currentTarget.lastChild?.nodeValue))
     }
 
     return (

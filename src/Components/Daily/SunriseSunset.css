@@ -1,7 +1,7 @@
 .sunrise-sunset-wrapper-card{
     width: 300px;
-    height: 150px;
-    background-color: #FFFDFD50;;
+    background-color: #FFFDFD50;
+    margin-bottom: 40px;
 }
 .sunrise-sunset-wrapper-card_title{
     height: 50px;
