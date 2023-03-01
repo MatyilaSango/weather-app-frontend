@@ -17,24 +17,40 @@ import { DailyAPI } from "../../API/DailyAPI";
 import SunriseSunset from "../Daily/SunriseSunset";
 
 function App() {
-  const [search, setSearch] = useState<string>("Cape Town, Western Cape");
+  const [search, setSearch] = useState<String>("Cape Town, Western Cape");
   const [todayData, setTodayData] = useState<todayDataType>();
   const [hourlyData, setHourlyData] = useState<hourlyDataType>();
   const [dailyData, setDailyData] = useState<dailyDataType>();
+  const [day_night, setDay_night] = useState<dataType[] | any[]>([])
+  const [reRender, setreRender] = useState<boolean>(true)
+  const [dailyOption, setDailyOption] = useState<String>("0");
 
-  const [, setDailyOption] = useState<String>("Cape Town, Western Cape");
+  const TEN_MINUTES: number = 600000;
+  
+  useEffect(() => {
+    if(reRender){
+      TodayAPI(search).then((res) => setTodayData(res));
+      HourlyAPI(search).then((res) => setHourlyData(res));
+      DailyAPI(search, dailyOption).then((res) => setDailyData(res));
+      if(dailyData){
+        setDay_night([
+          dailyData?.data.day_night.day,
+          dailyData?.data.day_night.night,
+        ])
+        setreRender(false)
+      }
+    }
+  }, [dailyData, search, dailyOption, reRender]);
 
   useEffect(() => {
-    console.log("here")
-    TodayAPI(search).then((res) => setTodayData(res));
-    HourlyAPI(search).then((res) => setHourlyData(res));
-    DailyAPI(search, "0").then((res) => setDailyData(res));
-  }, [search]);
+    setInterval(() => {
+      let date = new Date()
+      if(date.getMinutes() % 10 === 0){
+        setreRender(true)
+      }
+    }, TEN_MINUTES)
 
-  const day_night: dataType[] | any[] = [
-    dailyData?.data.day_night.day,
-    dailyData?.data.day_night.night,
-  ];
+  }, [])
 
   return (
     <div className="App">
@@ -46,6 +62,7 @@ function App() {
               data={todayData?.data}
               search={todayData?.search_parameter}
               setSearch={setSearch}
+              reRender={setreRender}
             />
           )}
           <div className="components-container-top__hourly">
@@ -87,6 +104,11 @@ function App() {
                 duration={dailyData?.data.sunrise_sunset.sunrise.duration}
                 rise={dailyData?.data.sunrise_sunset.sunrise.rise}
                 set={dailyData?.data.sunrise_sunset.sunrise.set}
+              />
+              <SunriseSunset
+                duration={dailyData?.data.sunrise_sunset.sunset.duration}
+                rise={dailyData?.data.sunrise_sunset.sunset.rise}
+                set={dailyData?.data.sunrise_sunset.sunset.set}
               />
             </div>
           </div>

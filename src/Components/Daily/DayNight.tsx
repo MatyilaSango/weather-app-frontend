@@ -1,13 +1,13 @@
 import React from "react";
 import "./DayNight.css";
 import {
-  dailyDataType,
   dataType,
 } from "../../Types/types";
 import Table from "./Table/Table";
 
 export default function DayNight(
   {
+    date,
     title,
     icon,
     temp,
@@ -22,7 +22,6 @@ export default function DayNight(
     precip,
     cloud_cover,
   }: dataType | any,
-  { date }: dailyDataType
 ) {
   return (
     <div className="day-night-wrapper">
