@@ -1,5 +1,5 @@
 .day-night-wrapper{
-    height: auto;
+    height: fit-content;
     width: 450px;
     background-color: #FFFDFD50;
     padding: 10px;

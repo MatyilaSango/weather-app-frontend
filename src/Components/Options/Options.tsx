@@ -1,12 +1,16 @@
 import React, { MouseEvent } from 'react'
 import "./Options.css"
 
-export default function Options({ setDailyOption }: React.Dispatch<React.SetStateAction<Number>> | any) {
+interface IhandleSetDailyOption {
+    handleSetDailyOption: (parameter: String) => void
+}
+
+export default function Options({ handleSetDailyOption }:  IhandleSetDailyOption){
 
     let arrayKeys: number[] = Array.from({length: 12}, (_,i) => i+1)
 
     const handleOptionChange = (e: MouseEvent<HTMLSpanElement>): void => {
-        setDailyOption(String(e.currentTarget.lastChild?.nodeValue))
+        handleSetDailyOption(String(e.currentTarget.lastChild?.nodeValue))
     }
 
     return (
