@@ -33,12 +33,13 @@ function App() {
       HourlyAPI(search).then((res) => setHourlyData(res));
       DailyAPI(search, dailyOption).then((res) => setDailyData(res));
       if(dailyData){
+        console.log(dailyData)
         setDay_night([
           dailyData?.data.day_night.day,
           dailyData?.data.day_night.night,
         ])
         setreRender(false)
-      }
+      } 
     }
   }, [dailyData, search, dailyOption, reRender]);
 
@@ -52,6 +53,16 @@ function App() {
 
   }, [])
 
+  const handleSetSearch = (parameter: String): void => {
+    setSearch(parameter)
+    setreRender(true)
+    document.querySelector(".today-wrapper__input-search__search")?.classList.add("removeLocations")
+  }
+
+  const handleSetDailyOption = (parameter: String): void => {
+    
+  }
+
   return (
     <div className="App">
       <img src={wallpaper} alt="pic" />
@@ -61,13 +72,12 @@ function App() {
             <Today
               data={todayData?.data}
               search={todayData?.search_parameter}
-              setSearch={setSearch}
-              reRender={setreRender}
+              handleSetSearch={handleSetSearch}
             />
           )}
           <div className="components-container-top__hourly">
-            {hourlyData?.data.map((data_) => (
-              <Hourly hour={data_.hour} icon={data_.icon} temp={data_.temp} />
+            {hourlyData?.data.map((data_, i) => (
+              <Hourly key={i} hour={data_.hour} icon={data_.icon} temp={data_.temp} />
             ))}
           </div>
         </div>
@@ -77,12 +87,13 @@ function App() {
               <span>Dail Weather</span>
             </div>
             <div className="components-container-bottom-nav__options">
-              <Options setDailyOption={setDailyOption} />
+              <Options handleSetDailyOption={handleSetDailyOption} />
             </div>
           </div>
           <div className="components-container-bottom-dnsstal">
-            {day_night.map((data) => (
+            {day_night.map((data, i) => (
               <DayNight
+                key={i}
                 icon={data.icon}
                 title={data.title}
                 temp={data.temperature}
