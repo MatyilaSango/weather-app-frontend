@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import wallpaper from "../../Pics/weather_wallpaper.jpg";
+
 import loadingGif from "../../Pics/loading-anim.gif";
 import gweatherLogo from "../../Pics/gweather.png"
 import Today from "../Today/Today";
@@ -19,6 +19,9 @@ import { DailyAPI } from "../../API/DailyAPI";
 import SunriseSunset from "../Daily/SunriseSunset";
 import TempHistory from "../Daily/TempHistory";
 
+let wallpaper = require("../../Pics/weather_wallpaper.jpg");
+let wallpaperNight = require("../../Pics/gweatherNight.png");
+
 function App() {
   const [search, setSearch] = useState<String>("Cape Town, Western Cape");
   const [todayData, setTodayData] = useState<todayDataType>();
@@ -27,7 +30,7 @@ function App() {
   const [day_night, setDay_night] = useState<dataType[] | any[]>([]);
   const [reRender, setreRender] = useState<boolean>(true);
   const [dailyOption] = useState<String>("0");
-
+  const [backgroundPic, setBackgroundPic] = useState<string>(wallpaper)
   const TEN_MINUTES: number = 600000;
 
   useEffect(() => {
@@ -47,6 +50,7 @@ function App() {
           .querySelector(".loading-wrapper")
           ?.classList.add("loading-wrapper__hide");
         setreRender(false);
+        console.log(dailyData)
       }
     }
   }, [dailyData, search, dailyOption, reRender]);
@@ -54,12 +58,18 @@ function App() {
   useEffect(() => {
     setInterval(() => {
       let date = new Date();
+      if(date.getHours() >= 18 && date.getHours() <= 6){
+        setBackgroundPic(wallpaperNight)
+      }
+      else{
+        setBackgroundPic(wallpaper)
+      }
       if (date.getMinutes() % 10 === 0) {
         setreRender(true);
       }
     }, TEN_MINUTES);
   }, []);
-
+  
   const handleSetSearch = (parameter: String): void => {
     setSearch(parameter);
     setDailyData(undefined);
@@ -73,8 +83,8 @@ function App() {
 
   return (
     <div className="App">
-      <img src={wallpaper} alt="pic" />
-      <div className="components-container">
+      <img src={backgroundPic} alt="pic" />
+      <div className="components-container" id="components-container ">
         <div className="components-container-top">
           {todayData && (
             <Today
@@ -94,6 +104,7 @@ function App() {
             ))}
           </div>
         </div>
+        {dailyData ?
         <div className="components-container-bottom">
           <div className="components-container-bottom-nav">
             <div className="components-container-bottom-nav__text">
@@ -140,13 +151,12 @@ function App() {
             <div className="temperature-history-wrapper">
               <div className="temperature-history-wrapper__top">
                 <span>Temperature History</span>
-              </div>
-              {dailyData ?
+              </div>         
               <TempHistory tempHistory={dailyData?.data.temperature_history} />
-              : ""}
             </div>
           </div>
         </div>
+        : ""}
         <img src={gweatherLogo} alt="logo" className="logo" />
       </div>
       <div className="loading-wrapper loading-wrapper__hide">
