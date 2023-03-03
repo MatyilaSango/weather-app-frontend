@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import wallpaper from "../../Pics/weather_wallpaper.jpg";
 import loadingGif from "../../Pics/loading-anim.gif";
+import gweatherLogo from "../../Pics/gweather.png"
 import Today from "../Today/Today";
 import { TodayAPI } from "../../API/TodayAPI";
 import {
@@ -146,6 +147,7 @@ function App() {
             </div>
           </div>
         </div>
+        <img src={gweatherLogo} alt="logo" className="logo" />
       </div>
       <div className="loading-wrapper loading-wrapper__hide">
         <div className="loading-wrapper__gif">

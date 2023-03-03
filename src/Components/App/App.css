@@ -21,7 +21,7 @@
   height: 100%;
   left: 0;
   top: 0;
-  padding: 2rem 1rem;
+  padding: 70px 1rem;
   overflow-y: scroll;
   /* background-image: url("../../Pics/weather_wallpaper.jpg"); */
   /* background-repeat: no-repeat; */
@@ -47,6 +47,7 @@
   margin-top: 20px;
   overflow: hidden;
   box-shadow: 0px 0px 10px 5px #00000050;
+  min-width: 400px;
 }
 .components-container-bottom-nav {
   height: 60px;
@@ -112,4 +113,25 @@
   align-items: center;
   justify-content: center;
   position: relative;
+}
+.components-container .logo{
+  height: auto;
+  width: 150px;
+  position: absolute;
+  top: 10px;
+}
+
+@media screen and  (max-width: 700px) {
+  .components-container-top{
+    flex-direction: column;
+    justify-content: center;
+    height: 500px;
+  }
+  .components-container-top .components-container-top__hourly{
+    width: 100%;
+  }
+  .components-container-top .today-wrapper{
+    height: 700px;
+    margin-bottom: 20px;
+  }
 }
