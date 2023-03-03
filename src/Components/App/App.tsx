@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import wallpaper from "../../Pics/weather_wallpaper.jpg";
+import loadingGif from "../../Pics/loading-anim.gif";
 import Today from "../Today/Today";
 import { TodayAPI } from "../../API/TodayAPI";
 import {
@@ -11,57 +12,63 @@ import {
 } from "../../Types/types";
 import Hourly from "../Hourly/Hourly";
 import { HourlyAPI } from "../../API/HourlyAPI";
-import Options from "../Options/Options";
+//import Options from "../Options/Options";
 import DayNight from "../Daily/DayNight";
 import { DailyAPI } from "../../API/DailyAPI";
 import SunriseSunset from "../Daily/SunriseSunset";
+import TempHistory from "../Daily/TempHistory";
 
 function App() {
   const [search, setSearch] = useState<String>("Cape Town, Western Cape");
   const [todayData, setTodayData] = useState<todayDataType>();
   const [hourlyData, setHourlyData] = useState<hourlyDataType>();
   const [dailyData, setDailyData] = useState<dailyDataType>();
-  const [day_night, setDay_night] = useState<dataType[] | any[]>([])
-  const [reRender, setreRender] = useState<boolean>(true)
-  const [dailyOption, setDailyOption] = useState<String>("0");
+  const [day_night, setDay_night] = useState<dataType[] | any[]>([]);
+  const [reRender, setreRender] = useState<boolean>(true);
+  const [dailyOption] = useState<String>("0");
 
   const TEN_MINUTES: number = 600000;
-  
+
   useEffect(() => {
-    if(reRender){
+    if (reRender) {
+      document
+        .querySelector(".loading-wrapper")
+        ?.classList.remove("loading-wrapper__hide");
       TodayAPI(search).then((res) => setTodayData(res));
       HourlyAPI(search).then((res) => setHourlyData(res));
       DailyAPI(search, dailyOption).then((res) => setDailyData(res));
-      if(dailyData){
-        console.log(dailyData)
+      if (dailyData) {
         setDay_night([
           dailyData?.data.day_night.day,
           dailyData?.data.day_night.night,
-        ])
-        setreRender(false)
-      } 
+        ]);
+        document
+          .querySelector(".loading-wrapper")
+          ?.classList.add("loading-wrapper__hide");
+        setreRender(false);
+      }
     }
   }, [dailyData, search, dailyOption, reRender]);
 
   useEffect(() => {
     setInterval(() => {
-      let date = new Date()
-      if(date.getMinutes() % 10 === 0){
-        setreRender(true)
+      let date = new Date();
+      if (date.getMinutes() % 10 === 0) {
+        setreRender(true);
       }
-    }, TEN_MINUTES)
-
-  }, [])
+    }, TEN_MINUTES);
+  }, []);
 
   const handleSetSearch = (parameter: String): void => {
-    setSearch(parameter)
-    setreRender(true)
-    document.querySelector(".today-wrapper__input-search__search")?.classList.add("removeLocations")
-  }
+    setSearch(parameter);
+    setDailyData(undefined);
+    setreRender(true);
+    document
+      .querySelector(".today-wrapper__input-search__search")
+      ?.classList.add("removeLocations");
+  };
 
-  const handleSetDailyOption = (parameter: String): void => {
-    
-  }
+  //const handleSetDailyOption = (parameter: String): void => {};
 
   return (
     <div className="App">
@@ -77,7 +84,12 @@ function App() {
           )}
           <div className="components-container-top__hourly">
             {hourlyData?.data.map((data_, i) => (
-              <Hourly key={i} hour={data_.hour} icon={data_.icon} temp={data_.temp} />
+              <Hourly
+                key={i}
+                hour={data_.hour}
+                icon={data_.icon}
+                temp={data_.temp}
+              />
             ))}
           </div>
         </div>
@@ -87,7 +99,7 @@ function App() {
               <span>Dail Weather</span>
             </div>
             <div className="components-container-bottom-nav__options">
-              <Options handleSetDailyOption={handleSetDailyOption} />
+              {/* <Options handleSetDailyOption={handleSetDailyOption} /> */}
             </div>
           </div>
           <div className="components-container-bottom-dnsstal">
@@ -112,17 +124,32 @@ function App() {
             ))}
             <div className="sunrise-sunset-wrapper">
               <SunriseSunset
+                title="Sunrise"
                 duration={dailyData?.data.sunrise_sunset.sunrise.duration}
                 rise={dailyData?.data.sunrise_sunset.sunrise.rise}
                 set={dailyData?.data.sunrise_sunset.sunrise.set}
               />
               <SunriseSunset
+                title="Sunset"
                 duration={dailyData?.data.sunrise_sunset.sunset.duration}
                 rise={dailyData?.data.sunrise_sunset.sunset.rise}
                 set={dailyData?.data.sunrise_sunset.sunset.set}
               />
             </div>
+            <div className="temperature-history-wrapper">
+              <div className="temperature-history-wrapper__top">
+                <span>Temperature History</span>
+              </div>
+              {dailyData ?
+              <TempHistory tempHistory={dailyData?.data.temperature_history} />
+              : ""}
+            </div>
           </div>
+        </div>
+      </div>
+      <div className="loading-wrapper loading-wrapper__hide">
+        <div className="loading-wrapper__gif">
+          <img src={loadingGif} alt="loading" />
         </div>
       </div>
     </div>
