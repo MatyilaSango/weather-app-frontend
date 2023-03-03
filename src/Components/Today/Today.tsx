@@ -36,6 +36,7 @@ export default function Today({
           setLocations(res)
         }
         else{
+          document.querySelector(".loading-wrapper")?.classList.remove("loading-wrapper__hide")
           handleSearch(inpitValue)
         }
       }).catch(err => {
