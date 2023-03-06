@@ -23,8 +23,6 @@
   top: 0;
   padding: 70px 1rem;
   overflow-y: scroll;
-  background-image: url("../../Pics/weather_wallpaper.jpg"); 
-  /* background-repeat: no-repeat; */
 }
 .components-container-top {
   width: 100%;
@@ -126,7 +124,7 @@
   .components-container-top{
     flex-direction: column;
     justify-content: center;
-    height: 500px;
+    height: 600px;
   }
   .components-container-top .components-container-top__hourly{
     width: 100%;
