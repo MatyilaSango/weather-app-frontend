@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 import loadingGif from "../../Pics/loading-anim.gif";
-import gweatherLogo from "../../Pics/gweather.png"
+import gweatherLogo from "../../Pics/gweather.png";
 import Today from "../Today/Today";
 import { TodayAPI } from "../../API/TodayAPI";
 import {
@@ -30,8 +30,9 @@ function App() {
   const [day_night, setDay_night] = useState<dataType[] | any[]>([]);
   const [reRender, setreRender] = useState<boolean>(true);
   const [dailyOption] = useState<String>("0");
-  const [backgroundPic, setBackgroundPic] = useState<string>(wallpaper)
-  const TEN_MINUTES: number = 600000;
+  const [backgroundPic, setBackgroundPic] = useState<string>("");
+  const [locTime, setLocTime] = useState<Date>(new Date());
+  //const TEN_MINUTES: number = 600000;
 
   useEffect(() => {
     if (reRender) {
@@ -50,26 +51,26 @@ function App() {
           .querySelector(".loading-wrapper")
           ?.classList.add("loading-wrapper__hide");
         setreRender(false);
-        console.log(dailyData)
       }
     }
   }, [dailyData, search, dailyOption, reRender]);
 
   useEffect(() => {
     setInterval(() => {
-      let date = new Date();
-      if(date.getHours() >= 18 && date.getHours() <= 6){
-        setBackgroundPic(wallpaperNight)
+      if (
+        (locTime?.getHours() >= 18 && locTime?.getHours() <= 24) ||
+        (locTime?.getHours() >= 0 && locTime?.getHours() <= 6)
+      ) {
+        setBackgroundPic(wallpaperNight);
+      } else {
+        setBackgroundPic(wallpaper);
       }
-      else{
-        setBackgroundPic(wallpaper)
-      }
-      if (date.getMinutes() % 10 === 0) {
+      if (locTime?.getMinutes() % 10 === 0) {
         setreRender(true);
       }
-    }, TEN_MINUTES);
-  }, []);
-  
+    }, 3000);
+  }, [locTime]);
+
   const handleSetSearch = (parameter: String): void => {
     setSearch(parameter);
     setDailyData(undefined);
@@ -91,6 +92,7 @@ function App() {
               data={todayData?.data}
               search={todayData?.search_parameter}
               handleSetSearch={handleSetSearch}
+              setLocTime={setLocTime}
             />
           )}
           <div className="components-container-top__hourly">
@@ -104,59 +106,63 @@ function App() {
             ))}
           </div>
         </div>
-        {dailyData ?
-        <div className="components-container-bottom">
-          <div className="components-container-bottom-nav">
-            <div className="components-container-bottom-nav__text">
-              <span>Dail Weather</span>
+        {dailyData ? (
+          <div className="components-container-bottom">
+            <div className="components-container-bottom-nav">
+              <div className="components-container-bottom-nav__text">
+                <span>Dail Weather</span>
+              </div>
+              <div className="components-container-bottom-nav__options">
+                {/* <Options handleSetDailyOption={handleSetDailyOption} /> */}
+              </div>
             </div>
-            <div className="components-container-bottom-nav__options">
-              {/* <Options handleSetDailyOption={handleSetDailyOption} /> */}
+            <div className="components-container-bottom-dnsstal">
+              {day_night.map((data, i) => (
+                <DayNight
+                  key={i}
+                  icon={data.icon}
+                  title={data.title}
+                  temp={data.temperature}
+                  real_feel={data.real_feel}
+                  real_feel_shade={data.real_feel_shade}
+                  phrase={data.phrase}
+                  max_uv_index={data.max_uv_index}
+                  wind={data.wind}
+                  wind_gusts={data.wind_gusts}
+                  prob_of_precip={data.prob_of_precip}
+                  prob_of_thunderstorm={data.prob_of_thunderstorm}
+                  precip={data.precip}
+                  cloud_cover={data.cloud_cover}
+                  date={dailyData?.date}
+                />
+              ))}
+              <div className="sunrise-sunset-wrapper">
+                <SunriseSunset
+                  title="Sunrise"
+                  duration={dailyData?.data.sunrise_sunset.sunrise.duration}
+                  rise={dailyData?.data.sunrise_sunset.sunrise.rise}
+                  set={dailyData?.data.sunrise_sunset.sunrise.set}
+                />
+                <SunriseSunset
+                  title="Sunset"
+                  duration={dailyData?.data.sunrise_sunset.sunset.duration}
+                  rise={dailyData?.data.sunrise_sunset.sunset.rise}
+                  set={dailyData?.data.sunrise_sunset.sunset.set}
+                />
+              </div>
+              <div className="temperature-history-wrapper">
+                <div className="temperature-history-wrapper__top">
+                  <span>Temperature History</span>
+                </div>
+                <TempHistory
+                  tempHistory={dailyData?.data.temperature_history}
+                />
+              </div>
             </div>
           </div>
-          <div className="components-container-bottom-dnsstal">
-            {day_night.map((data, i) => (
-              <DayNight
-                key={i}
-                icon={data.icon}
-                title={data.title}
-                temp={data.temperature}
-                real_feel={data.real_feel}
-                real_feel_shade={data.real_feel_shade}
-                phrase={data.phrase}
-                max_uv_index={data.max_uv_index}
-                wind={data.wind}
-                wind_gusts={data.wind_gusts}
-                prob_of_precip={data.prob_of_precip}
-                prob_of_thunderstorm={data.prob_of_thunderstorm}
-                precip={data.precip}
-                cloud_cover={data.cloud_cover}
-                date={dailyData?.date}
-              />
-            ))}
-            <div className="sunrise-sunset-wrapper">
-              <SunriseSunset
-                title="Sunrise"
-                duration={dailyData?.data.sunrise_sunset.sunrise.duration}
-                rise={dailyData?.data.sunrise_sunset.sunrise.rise}
-                set={dailyData?.data.sunrise_sunset.sunrise.set}
-              />
-              <SunriseSunset
-                title="Sunset"
-                duration={dailyData?.data.sunrise_sunset.sunset.duration}
-                rise={dailyData?.data.sunrise_sunset.sunset.rise}
-                set={dailyData?.data.sunrise_sunset.sunset.set}
-              />
-            </div>
-            <div className="temperature-history-wrapper">
-              <div className="temperature-history-wrapper__top">
-                <span>Temperature History</span>
-              </div>         
-              <TempHistory tempHistory={dailyData?.data.temperature_history} />
-            </div>
-          </div>
-        </div>
-        : ""}
+        ) : (
+          ""
+        )}
         <img src={gweatherLogo} alt="logo" className="logo" />
       </div>
       <div className="loading-wrapper loading-wrapper__hide">

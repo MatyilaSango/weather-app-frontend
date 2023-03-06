@@ -7,24 +7,30 @@ import { LocationsAPI } from "../../API/LocationsAPI";
 interface ITodayProps {
   data: todayType,
   search: String,
-  handleSetSearch: (parameter: String) => void
+  handleSetSearch: (parameter: String) => void,
+  setLocTime: React.Dispatch<React.SetStateAction<Date>>
 }
 
 export default function Today({
   data,
   search,
-  handleSetSearch
+  handleSetSearch,
+  setLocTime
 }: ITodayProps) {
   const [locations, setLocations] = useState<locationsType>();
 
   let inputRef = useRef<String | any>();
-  const [time, setTime] = useState<Date | any>(Date().split(" ")[4]);
+
+  const [time, setTime] = useState<Date>();
 
   useEffect(() => {
-    setInterval(() => {
-      setTime(Date())
+    setInterval(async () => {
+      let date = new Date()
+      date.setHours(date.getUTCHours() + Number(data.offset))
+      setTime(date)
+      //setLocTime(date)
     }, 1000)
-  }, [])
+  }, [time])
 
   const handleSearch = async (e: any): Promise<void> => {
     const inpitValue: String = e.target.value;
@@ -80,7 +86,7 @@ export default function Today({
           </div>
           <div className="wrapper-weather-top-det__time">
             <div className="time">
-              <span>{time.split(" ")[4]}</span>
+              <span>{time?.toString().split(" ")[4]}</span>
             </div>
           </div>
         </div>
