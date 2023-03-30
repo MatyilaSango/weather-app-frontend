@@ -22,15 +22,24 @@ export default function Today({
   let inputRef = useRef<String | any>();
 
   const [time, setTime] = useState<Date>();
+  const [isNewLocationTime, setIsNewLocationTime] = useState<Boolean>(true);
 
-  useEffect(() => {
+  const setNewTime = (): void => {
     setInterval(async () => {
       let date = new Date()
       date.setHours(date.getUTCHours() + Number(data.offset))
       setTime(date)
       //setLocTime(date)
     }, 1000)
-  }, [time])
+  }
+
+  useEffect(() => {
+    if(isNewLocationTime){ 
+      setNewTime();
+      console.log("here")
+      setIsNewLocationTime(false)
+    }  
+  }, [isNewLocationTime])
 
   const handleSearch = async (e: any): Promise<void> => {
     const inpitValue: String = e.target.value;
@@ -43,7 +52,8 @@ export default function Today({
         }
         else{
           document.querySelector(".loading-wrapper")?.classList.remove("loading-wrapper__hide")
-          handleSearch(inpitValue)
+          handleSetSearch(inpitValue)
+          setIsNewLocationTime(true)
         }
       }).catch(err => {
         alert("No such locations found!")
@@ -67,7 +77,7 @@ export default function Today({
               key={i}
               location={String(location).replace(", ZA\n", "")}
               handleSetSearch={handleSetSearch}
-              
+              setIsNewLocationTime={setIsNewLocationTime}
             />
           )): ""}
         </div>

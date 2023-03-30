@@ -3,13 +3,15 @@ import "./SearchOption.css"
 
 interface IsearchOption {
   location: String,
-  handleSetSearch: (parameter: String) => void
+  handleSetSearch: (parameter: String) => void,
+  setIsNewLocationTime: (parameter: boolean) => void
 }
 
-export default function SearchOption({location, handleSetSearch}: IsearchOption) {
+export default function SearchOption({location, handleSetSearch, setIsNewLocationTime}: IsearchOption) {
 
   const handleOptionClick = (e: MouseEvent<HTMLParagraphElement>): void => {
     handleSetSearch(String(e.currentTarget.lastChild?.nodeValue))
+    setIsNewLocationTime(true)
   }
 
   return (
